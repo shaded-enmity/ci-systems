@@ -2,9 +2,13 @@ apiVersion: v1
 kind: Template
 objects:
  - apiVersion: v1
+   kind: ImageStream
+   metadata:
+     name: 'ci-systems-${IMAGE_NAME}'
+ - apiVersion: v1
    kind: BuildConfig
    metadata:
-     name: '${IMAGE_NAME}.${IMAGE_VERSION}'
+     name: 'ci-systems-${IMAGE_NAME}.${IMAGE_VERSION}'
    spec:
      source:
        type: Git
@@ -18,8 +22,8 @@ objects:
      output:
        to:
          kind: ImageStreamTag
-         name: '${IMAGE_NAME}:${IMAGE_VERSION}'
-   name: '${IMAGE_NAME}.${IMAGE_VERSION}'
+         name: 'ci-systems-${IMAGE_NAME}:${IMAGE_VERSION}'
+   name: 'ci-systems-${IMAGE_NAME}.${IMAGE_VERSION}'
 parameters:
  - name: IMAGE_NAME
    description: 'Name of the image'
