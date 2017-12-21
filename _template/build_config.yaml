@@ -1,21 +1,25 @@
 apiVersion: v1
-kind: BuildConfig
-metadata:
-  name: '${IMAGE_NAME}'
-spec:
-  source:
-    type: Git
-    git:
-      uri: 'https://github.com/shaded-enmity/ci-systems'
-      ref: 'master'
-    contextDir: '${CONTEXT}'
-  strategy:
-    type: Docker
-    sourceStrategy:
-      from:
-        kind: ImageStreamTag
-        namespace: openshift
-name: '${IMAGE_NAME}:${IMAGE_VERSION}'
+kind: Template
+objects:
+ - apiVersion: v1
+   kind: BuildConfig
+   metadata:
+     name: '${IMAGE_NAME}.${IMAGE_VERSION}'
+   spec:
+     source:
+       type: Git
+       git:
+         uri: 'https://github.com/shaded-enmity/ci-systems'
+         ref: 'master'
+       contextDir: '${CONTEXT}'
+     strategy:
+       type: Docker
+       dockerStrategy:
+     output:
+       to:
+         kind: ImageStreamTag
+         name: '${IMAGE_NAME}:${IMAGE_VERSION}'
+   name: '${IMAGE_NAME}.${IMAGE_VERSION}'
 parameters:
  - name: IMAGE_NAME
    description: 'Name of the image'
