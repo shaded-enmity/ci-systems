@@ -19,6 +19,9 @@ objects:
      strategy:
        type: Docker
        dockerStrategy:
+         from: 
+           kind: ImageStreamTag
+           name: '${PARENT_IMAGE}'
      output:
        to:
          kind: ImageStreamTag
@@ -33,4 +36,7 @@ parameters:
    required: true
  - name: CONTEXT
    description: 'Build context directory'
+   required: true
+ - name: PARENT_IMAGE
+   description: 'Parent image stream to use'
    required: true
