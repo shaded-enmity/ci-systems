@@ -1,11 +1,21 @@
 #!/usr/bin/python
 
 import os
+import subprocess
 import sys
 
 
+def get_commited_files():
+    cmd = ['git', 'diff-tree', 
+           '--no-commit-id', '--name-only', '-r', 
+           '--root', 'HEAD']
+
+    return [tuple(f.split(os.path.sep)[:-1]) 
+            for f in subprocess.check_output(cmd).split('\n')[:-1]]
+
+
 pivot_directory = os.getcwd()
-objects = []
+objects = {}
 
 # collect all Dockerfiles into `objects` list
 for root, directory, files in os.walk('.'):
@@ -14,12 +24,16 @@ for root, directory, files in os.walk('.'):
 
     for f in files:
         path = os.path.join(root, f)
-        object_path = root.split(os.path.sep)[1:]
+        object_path = tuple(root.split(os.path.sep)[1:])
         if object_path:
-            objects.append(object_path)
+            objects[object_path] = path
 
-# sort so that base images go first
-objects = sorted(objects, key=lambda x: len(x))
+committed = get_commited_files()
 
+need_rebuild = []
+for new in committed:
+    need_rebuild = objects[new]
 
-print(objects)
+#print(objects)
+#print(committed)
+print(need_rebuild)
