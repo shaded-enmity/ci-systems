@@ -1,0 +1,25 @@
+#!/usr/bin/python
+
+import os
+import sys
+
+
+pivot_directory = os.getcwd()
+objects = []
+
+# collect all Dockerfiles into `objects` list
+for root, directory, files in os.walk('.'):
+    if '/.' in root:
+        continue
+
+    for f in files:
+        path = os.path.join(root, f)
+        object_path = root.split(os.path.sep)[1:]
+        if object_path:
+            objects.append(object_path)
+
+# sort so that base images go first
+objects = sorted(objects, key=lambda x: len(x))
+
+
+print(objects)
